@@ -2,6 +2,8 @@
 import argparse
 import torch
 import sys
+sys.path.append('D:\DeskTop\PIOperator')
+print(sys.path)
 from model.deepONet.deepONet1d import DeepONet
 from builders.burgers1d import Burgers1dBuilder
 from utils import trainer
@@ -15,7 +17,8 @@ parser.add_argument('--gpu',
                     help='choice of gpu'
                     )
 parser.add_argument('--batch-size',
-                    default=16,
+                    # default=16,
+                    default=1,
                     help='number of batch size to train the model'
                     )
 parser.add_argument('--weight-decay',
@@ -31,11 +34,11 @@ parser.add_argument('--epochs',
                     help='the number of inters in process'
                     )
 parser.add_argument('--result-file',
-                    default='E:\\dfno\\PIOperator\\results\\burgers1d\\loss_deeponet.txt',
+                    default='D:\\DeskTop\\PIOperator\\results\\burgers1d\\loss_deeponet.txt',
                     help='the path file to store the result of this experiment'
                     )
 parser.add_argument('--model-path',
-                    default='E:\\dfno\\PIOperator\\results\\burgers1d\\model_deeponet.pth',
+                    default='D:\\DeskTop\\PIOperator\\results\\burgers1d\\model_deeponet.pth',
                     type=str,
                     help='the path to save the neural model'
                     )
@@ -50,7 +53,8 @@ parser.add_argument('--n-test',
                     help='the numbers of testset'
                     )
 parser.add_argument('--resolution',
-                    default=128,
+                    # default=128,
+                    default=32,
                     type=int,
                     help='grid size')
 # resolve the args
@@ -70,9 +74,19 @@ def main():
     burgers_model = DeepONet([128, 128, 128, 128, 128],
                              [1, 128, 128, 128],
                              "tanh",).to(device=device)
+    
+    # burgers_model = DeepONet([32, 64, 64, 64, 64],
+    #                          [1, 32, 64, 64],
+    #                          "tanh",).to(device=device)
+    
+    # 减小burgers_model
+    # burgers_model = DeepONet([32, 32],
+    #                      [32, 32],
+    #                      "tanh").to(device=device)
 
     # load data from cylinder pickle ans csv files
-    path = 'E:\\dfno\\PIOperator\\data\\burgers\\1d\\burgers_1d.mat'
+    # path = 'E:\\dfno\\PIOperator\\data\\burgers\\1d\\burgers_1d.mat'
+    path = 'D:\\DeskTop\\PIOperator\\data\\burgers\\1d\\burgers_1d_N50.mat'
     burgers_dataloader = Burgers1dBuilder(config['n_train'],
                                           config['n_test'],
                                           config['resolution'],
@@ -80,13 +94,13 @@ def main():
                                           'DeepONet',
                                           batch_size=config['batch_size']
                                           )
-
+    print("************")
     # optimizer
     optimizer = instantiate_optimizer(burgers_model, config)
 
     # scheduler
     scheduler = instantiate_scheduler(optimizer, config)
-
+    print("=================")
     # train the whole process for cylinder
     trainer.train(model=burgers_model,
                   optimizer=optimizer,

@@ -25,6 +25,7 @@ class DeepONet(nn.Module):
         self.branch = FNN(branch_layers, activation_type)
         self.trunk = FNN(trunk_layers, activation_type)
         self.b = Parameter(torch.tensor(0.0))
+        
 
     def forward(self, x):
         """

@@ -43,6 +43,8 @@ class Burgers1dBuilder:
         # help path expand to absolute style in different platforms
         data_path = os.path.expanduser(path)
         data_mat = io.loadmat(data_path)
+        
+        print(data_mat.keys())
 
         if model_type not in MODEL_TYPE:
             raise ValueError('the type of selected model is not correct')
@@ -103,9 +105,12 @@ class Burgers1dBuilder:
 
     def process_data_DeepONet(self, data, n_train, n_test, resolution):
         inter_select = self.grid_size // resolution
-        x_data = data['a'][:, ::inter_select].astype(np.float32)
-        y_data = data['u'][:, ::inter_select].astype(np.float32)
-
+        # x_data = data['a'][:, ::inter_select].astype(np.float32)
+        # y_data = data['u'][:, ::inter_select].astype(np.float32)
+        x_data = data['input'][:, ::inter_select].astype(np.float32)
+        y_data = data['output'][:, ::inter_select].astype(np.float32)
+        print("x_data",x_data.shape)
+        print("y_data",y_data.shape)
         # select data series
         x_branch_train = x_data[:n_train, :]
         y_train = y_data[:n_train, :]

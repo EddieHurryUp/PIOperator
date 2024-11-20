@@ -92,11 +92,13 @@ def train(model, optimizer, scheduler, tr_loader, tt_loader, config):
             optimizer.zero_grad()
             if isinstance(x, list):
                 for i in range(len(x)):
-                    x[i] = torch.tensor(x[i]).to(config['device'])
+                    # x[i] = torch.tensor(x[i]).to(config['device'])
+                    x[i] = x[i].clone().detach().to(config['device'])
             else:
                 x = torch.tensor(x).to(config['device'])
             y = y.to(config['device'])
             pred_y = model(x)
+            print(y.shape, pred_y.shape)
             loss = loss_fn(pred_y, y)
             loss.backward()
             train_loss += loss.detach().cpu().numpy()
