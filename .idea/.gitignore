@@ -6,3 +6,6 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+
+/data/burgers/1d/
+/data/burgers/1d/burgers_1d.mat
